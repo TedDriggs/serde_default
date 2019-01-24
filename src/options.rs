@@ -3,10 +3,11 @@ use std::borrow::Cow;
 use darling::ast::Data;
 use darling::util::{Ignored, SpannedValue};
 use darling::{Error, FromMeta, Result};
-use syn::{Attribute, Ident, Path};
+use syn::{Attribute, Generics, Ident, Path};
 
-use codegen;
+use {codegen, util};
 
+/// Collector for struct-level information about the type deriving `SerdeDefault`.
 #[derive(FromDeriveInput)]
 #[darling(
     attributes(serde),
@@ -15,9 +16,17 @@ use codegen;
     allow_unknown_fields
 )]
 pub struct Options {
+    /// The name of the deriving type.
     ident: Ident,
+    /// The attributes from the deriving type to apply to the emitted trait impl.
+    /// These will be inserted into our struct by `darling`.
     attrs: Vec<Attribute>,
+    /// Information about the body of the struct. Since we told `darling` to produce
+    /// errors if we're given an enum, we ignore enum variants and only provide a type
+    /// for fields.
     data: Data<Ignored, SpannedValue<FieldOptions>>,
+    /// The generics of the input type, as passed to us by `darling`.
+    generics: Generics,
 }
 
 impl<'a> From<&'a Options> for codegen::TraitImpl<'a> {
@@ -25,12 +34,13 @@ impl<'a> From<&'a Options> for codegen::TraitImpl<'a> {
         codegen::TraitImpl {
             ident: &options.ident,
             attrs: &options.attrs,
+            generics: Cow::Borrowed(&options.generics),
             fields: options
                 .data
                 .as_ref()
                 .map_struct_fields(codegen::Field::from)
                 .take_struct()
-                .unwrap(),
+                .expect("Input body can't be an enum"),
         }
     }
 }
@@ -50,15 +60,22 @@ impl<'a> From<&'a SpannedValue<FieldOptions>> for codegen::Field<'a> {
             path: match options.default.as_ref() {
                 Some(DefaultDeclaration::Path(path)) => Cow::Borrowed(path),
                 Some(DefaultDeclaration::Trait) | None => {
-                    Cow::Owned(parse_quote!(::std::default::Default::default))
+                    let mut trait_path = util::trait_path(options.span());
+                    trait_path
+                        .segments
+                        .push(Ident::new("default", options.span()).into());
+                    Cow::Owned(trait_path)
                 }
             },
         }
     }
 }
 
+/// A declaration of the `default` attribute in `serde`.
 enum DefaultDeclaration {
+    /// Just the word `default`, which means "use the `Default` trait"
     Trait,
+    /// A key-value pair, in which case the value is the path of the zero-arg function
     Path(Path),
 }
 

@@ -18,5 +18,11 @@ fn field_1_default() -> u16 {
 
 #[test]
 fn check_field() {
-    assert_eq!(MyStruct::default(), MyStruct { field1: 3, field2: "".into() });
+    assert_eq!(
+        MyStruct::default(),
+        MyStruct {
+            field1: 3,
+            field2: "".into()
+        }
+    );
 }

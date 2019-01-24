@@ -35,14 +35,17 @@ extern crate syn;
 
 mod codegen;
 mod options;
+mod util;
 
 use darling::FromDeriveInput;
 use proc_macro::TokenStream;
 
+use options::Options;
+
 #[proc_macro_derive(SerdeDefault, attributes(serde))]
 pub fn derive_default(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as syn::DeriveInput);
-    let opts = match options::Options::from_derive_input(&ast) {
+    let opts = match Options::from_derive_input(&ast) {
         Ok(val) => val,
         Err(err) => {
             return err.write_errors().into();

@@ -1,14 +1,16 @@
 [package]
 name = "serde_default"
 version = "0.1.0"
-authors = ["Ted Driggs <ted.driggs@outlook.com>"]
+authors = ["Ted Driggs <t.driggs@outlook.com>"]
 edition = "2015"
+license = "MIT"
 
 [lib]
 proc-macro = true
 
 [dependencies]
-darling = {version = "0.8.3", path = "../darling"}
+# FIXME this is temporary until 0.8.4 is released with the allow_unknown_fields attribute
+darling = { git = "https://github.com/TedDriggs/darling" }
 quote = "0.6"
 syn = "0.15.26"
 proc-macro2 = "0.4.26"
