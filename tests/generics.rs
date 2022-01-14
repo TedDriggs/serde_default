@@ -1,13 +1,13 @@
 #[macro_use]
 extern crate serde_default;
 
-#[derive(Debug, SerdeDefault, PartialEq, Eq)]
+#[derive(Debug, DefaultFromSerde, PartialEq, Eq)]
 pub struct MyStruct<T> {
     #[serde(default)]
     name: String,
     #[serde(default)]
     field2: T,
-    #[serde(default="Vec::new")]
+    #[serde(default = "Vec::new")]
     field3: Vec<T>,
 }
 
@@ -22,7 +22,7 @@ impl<T: Default> MyStruct<T> {
 
 // Here we test the tuple behavior with generics, as well as ensuring that additional
 // trait bounds are not lost during the compilation process.
-#[derive(Debug, SerdeDefault, PartialEq, Eq)]
+#[derive(Debug, DefaultFromSerde, PartialEq, Eq)]
 #[allow(dead_code)]
 pub struct MyTupleStruct<'a, T, U: ::std::fmt::Debug>(
     #[serde(default)] T,

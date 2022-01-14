@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate serde_default;
 
-#[derive(Debug, SerdeDefault, PartialEq, Eq)]
+#[derive(Debug, DefaultFromSerde, PartialEq, Eq)]
 pub struct MyStruct {
     // This field is renamed to make sure serde_default is properly ignoring
     // other serde fields

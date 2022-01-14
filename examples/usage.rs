@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate serde_default;
 
-#[derive(Debug, SerdeDefault, PartialEq, Eq)]
+#[derive(Debug, DefaultFromSerde, PartialEq, Eq)]
 pub struct MyStruct {
     #[serde(default = "field_1_default")]
     field1: u16,
@@ -13,10 +13,10 @@ fn field_1_default() -> u16 {
     3
 }
 
-#[derive(Debug, SerdeDefault)]
+#[derive(Debug, DefaultFromSerde)]
 pub struct MyTupleStruct(
     #[serde(default = "field_1_default")] u16,
-    #[serde(default)] String
+    #[serde(default)] String,
 );
 
 fn main() {

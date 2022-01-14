@@ -9,7 +9,7 @@ use syn::{Attribute, Generics, Ident, Path};
 
 use crate::{codegen, util};
 
-/// Collector for struct-level information about the type deriving `SerdeDefault`.
+/// Collector for struct-level information about the type deriving `DefaultFromSerde`.
 #[derive(FromDeriveInput)]
 #[darling(
     attributes(serde),
