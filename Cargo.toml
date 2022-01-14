@@ -2,15 +2,14 @@
 name = "serde_default"
 version = "0.1.0"
 authors = ["Ted Driggs <t.driggs@outlook.com>"]
-edition = "2015"
+edition = "2018"
 license = "MIT"
 
 [lib]
 proc-macro = true
 
 [dependencies]
-# FIXME this is temporary until 0.8.4 is released with the allow_unknown_fields attribute
-darling = { git = "https://github.com/TedDriggs/darling" }
-quote = "0.6"
-syn = "0.15.26"
-proc-macro2 = "0.4.26"
+darling = "0.13.1"
+quote = "1.0.14"
+syn = "1.0.85"
+proc-macro2 = "1.0.36"

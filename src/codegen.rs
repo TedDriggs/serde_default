@@ -2,10 +2,10 @@ use std::borrow::Cow;
 
 use darling::ast::Fields;
 use proc_macro2::{Span, TokenStream};
-use quote::{ToTokens, TokenStreamExt};
+use quote::{quote, quote_spanned, ToTokens, TokenStreamExt};
 use syn::{self, Attribute, Generics, Ident, Path};
 
-use util;
+use crate::util;
 
 /// Receiver for trait impl; this gets the struct ident and the fields
 /// in the struct.
@@ -22,12 +22,16 @@ pub struct TraitImpl<'a> {
 impl<'a> TraitImpl<'a> {
     fn body(&self) -> TokenStream {
         if self.fields.style.is_struct() {
-            let fields = self.fields.as_ref();
-            quote! { Self { #(#fields),* }}
+            let fields = self.fields.iter();
+            quote! {
+                Self { #(#fields),* }
+            }
         } else {
             let ident = &self.ident;
-            let fields = self.fields.as_ref();
-            quote! { #ident(#(#fields),*) }
+            let fields = self.fields.iter();
+            quote! {
+                #ident(#(#fields),*)
+            }
         }
     }
 }
@@ -82,7 +86,7 @@ fn compute_impl_bounds(bound: Path, mut generics: Generics) -> Generics {
         path: bound,
     });
 
-    for mut typ in generics.type_params_mut() {
+    for typ in generics.type_params_mut() {
         typ.bounds.push(added_bound.clone());
     }
 
