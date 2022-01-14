@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Ted Driggs <t.driggs@outlook.com>"]
 edition = "2018"
 license = "MIT"
+description = "Generate a Default impl using serde attributes"
 
 [lib]
 proc-macro = true
