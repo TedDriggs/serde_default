@@ -14,6 +14,7 @@ fn field_1_default() -> u16 {
 }
 
 #[derive(Debug, DefaultFromSerde)]
+#[allow(dead_code)]
 pub struct MyTupleStruct(
     #[serde(default = "field_1_default")] u16,
     #[serde(default)] String,
