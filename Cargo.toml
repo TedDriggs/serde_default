@@ -1,6 +1,6 @@
 [package]
 name = "serde_default"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Ted Driggs <t.driggs@outlook.com>"]
 edition = "2018"
 repository = "https://github.com/TedDriggs/serde_default"
